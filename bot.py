@@ -9,8 +9,8 @@ import pyautogui
 
 # --- CONFIGURACIÓN DE SEGURIDAD ---
 # NOTA: Se recomienda usar variables de entorno para proteger tu token.
-TOKEN = "8817521352:AAHRf-poZ2uWbTv4PKzG991H_0WDvcwUBKY"
-ADMIN_ID = 1364517242  
+TOKEN = "TOKEN_DE_TU_TELEGRAM_BOT"
+ADMIN_ID = 1234567890  Reemplaza con tu ID numérico de Telegram 
 
 # Configuración de PyAutoGUI
 pyautogui.PAUSE = 0.05
