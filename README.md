@@ -1,98 +1,279 @@
- 
-# 🖥️ ControlLinuxMedia_telegrambot
-Bot de telegram para controlar teclado, raton, volumen...
+<div align="center">
 
-Un bot de Telegram escrito en Python que te permite emular el uso del **ratón, teclado y controlar la reproducción multimedia** de tu ordenador con Linux de forma remota y segura.
+# 🖥️ ControlLinuxMedia Telegram Bot
+
+**Controla tu escritorio Linux de forma remota desde Telegram.**
+
+[![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Telegram Bot API](https://img.shields.io/badge/Telegram-Bot%20API-26A5E4?logo=telegram&logoColor=white)](https://core.telegram.org/bots/api)
+[![Linux](https://img.shields.io/badge/Linux-X11-FCC624?logo=linux&logoColor=black)](https://www.linux.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+Bot de Telegram escrito en Python para manejar multimedia, ratón, teclado, navegador y algunas funciones del sistema en un equipo Linux.
+
+</div>
+
+> ⚠️ **Proyecto de uso personal.** Este bot puede ejecutar comandos en el equipo y apagarlo o reiniciarlo. Instálalo únicamente en ordenadores que controles, protege el token y no expongas el bot a usuarios no autorizados.
+
+## 📌 Índice
+
+- [Características](#-características)
+- [Cómo funciona](#-cómo-funciona)
+- [Requisitos](#-requisitos)
+- [Instalación rápida](#-instalación-rápida)
+- [Configuración](#-configuración)
+- [Uso](#-uso)
+- [Ejecución como servicio](#-ejecución-como-servicio)
+- [Seguridad](#-seguridad)
+- [Solución de problemas](#-solución-de-problemas)
+- [Estructura del proyecto](#-estructura-del-proyecto)
+- [Limitaciones conocidas](#-limitaciones-conocidas)
+- [Contribuir](#-contribuir)
+- [Licencia](#-licencia)
 
 ## ✨ Características
-*   🎵 **Control Multimedia:** Subir/bajar volumen, reproducir, pausar y cambiar de pista.
-*   🖱️ **Control del Ratón:** Movimiento direccional mediante botones, click simple y doble click.
-*   ⌨️ **Control del Teclado:** Envió de texto directo y simulación de la tecla *Enter*.
-*   📸 **Capturas de Pantalla:** Recibe una imagen en tiempo real de lo que ocurre en tu monitor.
-*   🔒 **Seguridad Integrada:** El bot solo responde a los comandos del administrador configurado.
 
-## 🛠️ Requisitos del Sistema (Linux)
-El script requiere `xdotool` para interactuar con la interfaz gráfica. Instálalo ejecutando:
+### 🎵 Multimedia y pantalla
+
+- Subir y bajar el volumen.
+- Silenciar el audio.
+- Reproducir, pausar y cambiar de pista.
+- Aumentar y reducir el brillo mediante teclas multimedia.
+
+### 🖱️ Ratón
+
+- Mover el cursor arriba, abajo, izquierda y derecha.
+- Click izquierdo, click derecho y doble click.
+- Scroll vertical.
+- Dos sensibilidades configurables: 20 px y 100 px.
+
+### ⌨️ Teclado y pantalla
+
+- Escribir texto recibido desde Telegram en la ventana activa.
+- Teclas Enter, Espacio, Escape y Backspace.
+- Atajo Alt+Tab.
+- Capturas de pantalla enviadas directamente al chat.
+
+### 🌐 Navegador
+
+- Abrir YouTube y Google.
+- Buscar vídeos en YouTube.
+- Abrir una emisora Lo-Fi.
+- Crear y cerrar pestañas con atajos de teclado.
+
+### 💻 Sistema
+
+- Consultar CPU, memoria RAM y uptime.
+- Bloquear la pantalla.
+- Ejecutar comandos Bash y devolver su salida.
+- Reiniciar o apagar el equipo.
+
+## 🔄 Cómo funciona
+
+1. `bot.py` inicia un cliente de Telegram usando `python-telegram-bot` en modo polling.
+2. El bot acepta `/start` y mensajes de texto únicamente del `ADMIN_ID` configurado.
+3. Los botones del teclado de Telegram se traducen en acciones locales mediante `PyAutoGUI`, `xdotool`, `subprocess` o `webbrowser`.
+4. `install.sh` instala `xdotool` y las dependencias Python, y opcionalmente registra el bot como servicio de `systemd`.
+
+## ✅ Requisitos
+
+- Linux con una sesión gráfica **X11/Xorg** activa.
+- Python 3.9 o superior recomendado.
+- `pip` y `git`.
+- `xdotool`.
+- Un bot creado mediante [@BotFather](https://t.me/BotFather).
+- El ID numérico de tu cuenta de Telegram.
+
+> **Wayland:** el proyecto utiliza `xdotool` y automatización de escritorio orientada a X11. En Wayland algunas funciones pueden no funcionar o estar restringidas. Selecciona una sesión Xorg/X11 si necesitas control completo.
+
+## 🚀 Instalación rápida
+
+### 1. Clonar el repositorio
 
 ```bash
-sudo apt update && sudo apt install -y xdotool
+git clone https://github.com/FireEyeXX/ControlLinuxMedia_telegrambot.git
+cd ControlLinuxMedia_telegrambot
 ```
-*Nota: Si utilizas entornos modernos basados en Wayland, asegúrate de iniciar sesión seleccionando la sesión **X11 / Xorg** en la pantalla de bloqueo para que la emulación del ratón funcione correctamente.*
 
-## 🚀 Instalación y Uso
+### 2. Crear un entorno virtual
 
-1.  **Clona este repositorio o descarga los archivos:**
-    ```bash
-    git clone <URL_DE_TU_REPOSITORIO>
-    cd <NOMBRE_CARPETA>
-    ```
+Se recomienda aislar las dependencias del proyecto:
 
-2.  **Instala las dependencias necesarias:**
-    ```bash
-    pip install -r requirements.txt
-    ```
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+```
 
-3.  **Configura tus credenciales:**
-    Abre el archivo `bot.py` y edita las siguientes variables con tu Token de BotFather y tu ID de usuario de Telegram:
-    ```python
-    TOKEN = "TU_TELEGRAM_BOT_TOKEN"
-    ADMIN_ID = 123456789  # Tu ID numérico
-    ```
+### 3. Instalar dependencias del sistema y Python
 
-4.  **Inicia el bot:**
-    ```bash
-    python bot.py
-    ```
+```bash
+sudo apt update
+sudo apt install -y xdotool python3-tk python3-dev scrot
+python -m pip install -r requirements.txt
+```
 
-5.  Abre el chat con tu bot en Telegram y presiona `/start`.
+`python3-tk` y `scrot` pueden ser necesarios para que las capturas de pantalla funcionen correctamente según la distribución y el entorno gráfico.
 
-  ## 🚀 Instalación y Uso Automático
+### 4. Configurar y ejecutar
 
-El proyecto incluye un script en Bash que automatiza la instalación de dependencias del sistema (`xdotool`), paquetes de Python y la creación del servicio en segundo plano (`systemd`).
+Edita `bot.py` y sustituye los valores de ejemplo:
 
-1. **Clona este repositorio o descarga los archivos:**
+```python
+TOKEN = "TU_TOKEN_DE_TELEGRAM"
+ADMIN_ID = 123456789
+```
+
+Después inicia el bot:
+
+```bash
+python bot.py
+```
+
+Abre el chat con tu bot en Telegram y envía `/start`.
+
+## ⚙️ Configuración
+
+### Crear el token
+
+1. Abre Telegram y busca [@BotFather](https://t.me/BotFather).
+2. Ejecuta `/newbot`.
+3. Sigue las instrucciones y copia el token generado.
+
+### Obtener tu `ADMIN_ID`
+
+Puedes usar un bot como [@userinfobot](https://t.me/userinfobot) para consultar tu ID numérico. Solo ese usuario podrá controlar el equipo, siempre que el valor coincida con `ADMIN_ID`.
+
+> **Recomendación:** no publiques el token ni lo guardes en commits. La versión actual usa placeholders en `bot.py`; para producción es preferible modificar el código para leer `TOKEN` y `ADMIN_ID` desde variables de entorno o un archivo de credenciales protegido.
+
+## 🛠️ Instalación automática con `systemd`
+
+El script incluido instala `xdotool`, instala `requirements.txt` y crea el servicio `tgbot.service` para iniciar el bot automáticamente con el entorno gráfico:
+
+```bash
+chmod +x install.sh
+./install.sh
+```
+
+Ejecuta el instalador desde la raíz del repositorio. El script utiliza la ruta actual y el intérprete Python encontrado mediante `which python`.
+
+### Comandos del servicio
+
+```bash
+# Consultar estado
+sudo systemctl status tgbot.service
+
+# Ver logs en tiempo real
+journalctl -u tgbot.service -f
+
+# Reiniciar después de cambiar la configuración
+sudo systemctl restart tgbot.service
+
+# Detener
+sudo systemctl stop tgbot.service
+
+# Desactivar el inicio automático
+sudo systemctl disable tgbot.service
+```
+
+> Si utilizas un entorno virtual, revisa `ExecStart` en `/etc/systemd/system/tgbot.service` para que apunte a `.venv/bin/python` en lugar del Python global.
+
+## 🔒 Seguridad
+
+Este bot controla un equipo real, por lo que debes tratarlo como una herramienta administrativa:
+
+- Mantén el token privado. Si se filtra, revócalo inmediatamente desde BotFather.
+- Configura un `ADMIN_ID` único y verifica que sea el correcto.
+- No compartas el bot ni permitas que usuarios desconocidos interactúen con él.
+- No ejecutes el bot en un equipo crítico sin probarlo primero.
+- Revisa cuidadosamente cualquier comando enviado mediante **Ejecutar CMD**.
+- Ten en cuenta que esa función usa `subprocess.run(..., shell=True)` y permite ejecutar comandos con los permisos del usuario del servicio.
+- No expongas credenciales, archivos privados ni salidas de terminal en chats o capturas.
+- Considera reemplazar las credenciales en el código por variables de entorno y permisos restrictivos.
+
+## 🧩 Solución de problemas
+
+### El bot no responde
+
+Comprueba que el proceso está activo y revisa los logs:
+
+```bash
+ps aux | grep bot.py
+journalctl -u tgbot.service -n 100 --no-pager
+```
+
+Verifica también que `TOKEN` y `ADMIN_ID` sean correctos y que el bot haya recibido `/start`.
+
+### `xdotool` no controla el escritorio
+
+Confirma que la sesión gráfica es X11/Xorg:
+
+```bash
+echo "$XDG_SESSION_TYPE"
+which xdotool
+```
+
+Si el resultado de la primera orden es `wayland`, inicia una sesión Xorg/X11.
+
+### PyAutoGUI no puede abrir la pantalla
+
+Asegúrate de que `DISPLAY` apunta a la sesión gráfica correcta y de que el usuario del servicio tiene acceso a ella:
+
+```bash
+echo "$DISPLAY"
+echo "$XAUTHORITY"
+```
+
+En instalaciones con `systemd`, puede ser necesario añadir `DISPLAY` y `XAUTHORITY` adecuados en el archivo del servicio.
+
+### Las capturas de pantalla fallan
+
+Instala los paquetes auxiliares de tu distribución. En Debian/Ubuntu:
+
+```bash
+sudo apt install -y python3-tk scrot
+```
+
+## 📁 Estructura del proyecto
+
+```text
+ControlLinuxMedia_telegrambot/
+├── bot.py             # Bot de Telegram, menús y acciones locales
+├── install.sh         # Instalación y configuración del servicio systemd
+├── requirements.txt   # Dependencias Python
+├── LICENSE            # Licencia MIT
+└── README.md          # Documentación del proyecto
+```
+
+## ⚠️ Limitaciones conocidas
+
+- El control de escritorio depende de una sesión gráfica local y está diseñado principalmente para X11.
+- El servicio generado por `install.sh` asume una instalación basada en Debian/Ubuntu (`apt`) y una pantalla disponible en `:0`.
+- El estado temporal de usuario se guarda en memoria y se pierde al reiniciar el proceso.
+- No hay una suite de tests automatizados incluida actualmente.
+- La ejecución de comandos de terminal es deliberadamente potente y debe considerarse una operación privilegiada, aunque el servicio se ejecute con el usuario configurado.
+
+## 🤝 Contribuir
+
+1. Crea un fork del repositorio.
+2. Crea una rama descriptiva:
+
    ```bash
-   git clone <URL_DE_TU_REPOSITORIO>
-   cd tikwhater
+   git checkout -b mejora/documentacion
    ```
 
-2. **Configura tu Bot de Telegram:**
-   Abre el archivo `bot.py` con tu editor favorito y reemplaza las credenciales con tu Token y tu ID de usuario:
-   ```python
-   TOKEN = "TU_TELEGRAM_BOT_TOKEN"
-   ADMIN_ID = 123456789  # Tu ID numérico
-   ```
-
-3. **Ejecuta el instalador automático:**
-   Dale permisos de ejecución al script e inícialo:
-   ```bash
-   chmod +x install.sh
-   ./install.sh
-   ```
-
-El script se encargará de todo y dejará el bot corriendo de inmediato.
-
-## 🛠️ Gestión del Servicio de Fondo
-
-Una vez instalado, el bot se ejecutará solo cada vez que enciendas el PC. Puedes administrarlo con los siguientes comandos:
-
-*   **Verificar si el bot está funcionando:**
-    ```bash
-    sudo systemctl status tgbot.service
-    ```
-*   **Detener el bot:**
-    ```bash
-    sudo systemctl stop tgbot.service
-    ```
-*   **Reiniciar el bot** (si cambias el Token o editas el código):
-    ```bash
-    sudo systemctl restart tgbot.service
-    ```
-*   **Ver registros/logs del bot en tiempo real:**
-    ```bash
-    journalctl -u tgbot.service -f
-    ```
-
+3. Realiza cambios pequeños y enfocados.
+4. Prueba el bot en una sesión X11 antes de abrir un Pull Request.
+5. Describe claramente los cambios y cualquier requisito adicional.
 
 ## 📄 Licencia
-Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+
+Este proyecto se distribuye bajo la [Licencia MIT](LICENSE).
+
+---
+
+<div align="center">
+
+Hecho para administrar un escritorio Linux desde Telegram 🐧
+
+</div>
