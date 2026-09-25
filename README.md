@@ -46,5 +46,53 @@ sudo apt update && sudo apt install -y xdotool
 
 5.  Abre el chat con tu bot en Telegram y presiona `/start`.
 
+  ## 🚀 Instalación y Uso Automático
+
+El proyecto incluye un script en Bash que automatiza la instalación de dependencias del sistema (`xdotool`), paquetes de Python y la creación del servicio en segundo plano (`systemd`).
+
+1. **Clona este repositorio o descarga los archivos:**
+   ```bash
+   git clone <URL_DE_TU_REPOSITORIO>
+   cd tikwhater
+   ```
+
+2. **Configura tu Bot de Telegram:**
+   Abre el archivo `bot.py` con tu editor favorito y reemplaza las credenciales con tu Token y tu ID de usuario:
+   ```python
+   TOKEN = "TU_TELEGRAM_BOT_TOKEN"
+   ADMIN_ID = 123456789  # Tu ID numérico
+   ```
+
+3. **Ejecuta el instalador automático:**
+   Dale permisos de ejecución al script e inícialo:
+   ```bash
+   chmod +x install.sh
+   ./install.sh
+   ```
+
+El script se encargará de todo y dejará el bot corriendo de inmediato.
+
+## 🛠️ Gestión del Servicio de Fondo
+
+Una vez instalado, el bot se ejecutará solo cada vez que enciendas el PC. Puedes administrarlo con los siguientes comandos:
+
+*   **Verificar si el bot está funcionando:**
+    ```bash
+    sudo systemctl status tgbot.service
+    ```
+*   **Detener el bot:**
+    ```bash
+    sudo systemctl stop tgbot.service
+    ```
+*   **Reiniciar el bot** (si cambias el Token o editas el código):
+    ```bash
+    sudo systemctl restart tgbot.service
+    ```
+*   **Ver registros/logs del bot en tiempo real:**
+    ```bash
+    journalctl -u tgbot.service -f
+    ```
+
+
 ## 📄 Licencia
 Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
